@@ -1,11 +1,11 @@
 
 ## This code imports oil price data from the online website Quandl
-## Are there near term patterns in the data
+
 
 ## import libraries
-import pandas as pd
 import requests
 import io
+import pandas as pd
 import numpy as np
 
 
@@ -35,12 +35,15 @@ print(duplicate)
 ## drop the duplicates
 rawdata.index.drop_duplicates()
 
+## examine the shape of the dataframe
+print("Data Frame Shape:")
+print(rawdata.shape)
+
 ## Add the month and day to the data
 rawdata['Day'] = pd.DatetimeIndex(rawdata.index).day
 rawdata['Month'] = pd.DatetimeIndex(rawdata.index).month
 
 ## Add in the rolling moving averages
-
 rawdata['3-Day Moving Ave'] = rawdata.iloc[:,0].rolling(window=3).mean()
 rawdata['10-Day Moving Ave'] = rawdata.iloc[:,0].rolling(window=10).mean()
 rawdata['20-Day Moving Ave'] = rawdata.iloc[:,0].rolling(window=20).mean()
@@ -56,7 +59,7 @@ with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'dis
     print("This is all the data:")
     print(rawdata)
 
-## Print out the number of bullish and bearish days
+## Print out the number of bullish and bsdearish days
 print("Number of bullish and bearish days")
 print(rawdata["Sentiment"].value_counts())
 
@@ -66,9 +69,8 @@ data_2015 = rawdata.loc["2015-01-01":]
 print("Shape of data after for the period 2015+")
 print(data_2015.shape)
 
-## Import matplotlib and seaborn
+## Import matplotlib
 import matplotlib.pyplot as plt
-
 
 ## Plot the 2015+ data
 
@@ -95,7 +97,7 @@ ax.xaxis.set_major_locator(plt.MaxNLocator(5))
 plt.show()
 
 
-## set up to use seaborn
+## import and set up seaborn
 import seaborn as sns
 
 sns.set(style="darkgrid") #change style
@@ -104,7 +106,7 @@ sns.cubehelix_palette(as_cmap=True)
 ## Create a list called order which can be used subsequently
 order = [1,2,3,4,5,6,7,8,9,10,11,12]
 
-chart = sns.relplot(x = 'Day', y = 'Value', data = data_2015, kind = 'line',ci = 'sd', style = 'Month', col = 'Month', col_wrap=3, col_order = order, height=2)
+chart = sns.relplot(x = 'Day', y = 'Value', data = data_2015, kind = 'line',ci = "sd", style = 'Month', col = 'Month', col_wrap=3, col_order = order, height=2)
 
 chart.fig.suptitle("Oil price in each month of the year (year 2015+)", y =0.95)
 plt.show()
@@ -115,7 +117,6 @@ print("Statistics on oil price by month")
 print(data_2015.groupby('Month')['Value'].agg([min, max, np.mean, np.median]))
 
 ##Merge dataframe with itself
-##Take current date and put the subsequent date on the same row
 
 merged_data_2015 = data_2015.merge(data_2015, on = data_2015.index, how = 'left')
 print(merged_data_2015.head())

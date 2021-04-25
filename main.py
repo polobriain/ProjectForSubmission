@@ -7,7 +7,7 @@ import pandas as pd
 import requests
 import io
 import numpy as np
-import calendar
+
 
 ## take date from Quandl using an API
 r = requests.get('https://www.quandl.com/api/v3/datasets/FRED/DCOILBRENTEU.csv?api_key=uvNKbWpn_an_BhgACSyE')
@@ -68,8 +68,7 @@ print(data_2015.shape)
 
 ## Import matplotlib and seaborn
 import matplotlib.pyplot as plt
-import seaborn as sns
-import matplotlib.dates as mdates
+
 
 ## Plot the 2015+ data
 
@@ -79,7 +78,7 @@ ax.plot(data_2015.index, data_2015['Value'], color = 'red')
 ax.set_title("Plot of oil price vs time from year 2015", color = 'purple')
 
 ax.set_xlabel('Date')
-ax.set_ylabel('Oil price over time')
+ax.set_ylabel('Oil price (USD$)')
 
 ax.tick_params('x', colors = 'green')
 ax.tick_params('y', colors = 'blue')
@@ -87,20 +86,22 @@ ax.tick_params('y', colors = 'blue')
 # find lowest data point in the period and highlight
 min_value_date = data_2015['Value'].idxmin()
 min_value = data_2015['Value'].min()
-ax.annotate("Lowest oil price in period of " + str(min_value) + " on " + str(min_value_date), xy = (min_value_date,min_value), arrowprops={'arrowstyle':"->", 'color':"grey"})
 
-# reduce number of x_ticks to 5
+ax.annotate("Lowest oil price in period of " + str(min_value) + " on " + str(min_value_date), xy = (min_value_date,min_value), xytext=(-5, 15), arrowprops={'arrowstyle':"->", 'color':"grey"})
+
+## reduce number of x_ticks to 5
 ax.xaxis.set_major_locator(plt.MaxNLocator(5))
 
 plt.show()
 
 
-## print charges
+## set up to use seaborn
+import seaborn as sns
 
 sns.set(style="darkgrid") #change style
 sns.cubehelix_palette(as_cmap=True)
 
-#Create a list called order which can be used subsequently
+## Create a list called order which can be used subsequently
 order = [1,2,3,4,5,6,7,8,9,10,11,12]
 
 chart = sns.relplot(x = 'Day', y = 'Value', data = data_2015, kind = 'line',ci = 'sd', style = 'Month', col = 'Month', col_wrap=3, col_order = order, height=2)
